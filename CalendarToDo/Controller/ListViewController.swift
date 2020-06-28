@@ -18,14 +18,31 @@ class ListViewController: UIViewController {
     private let viewModel: ToDoItemViewModel
     private var toDoItems: [ToDoItem]
     private var selectedDate: Date?
-    private lazy var refreshControl = UIRefreshControl()
+    private let refreshControl: UIRefreshControl = {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refresh), for: UIControl.Event.valueChanged)
+        return refreshControl
+    }()
+    
+    private let dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US")
+        dateFormatter.dateFormat = "MMMM dd, yyyy"
+        dateFormatter.timeZone = TimeZone(identifier: "MSK")
+        return dateFormatter
+    }()
+    
+    private let timeFormatter: DateFormatter = {
+        let timeFormatter = DateFormatter()
+        timeFormatter.locale = Locale(identifier: "en_US")
+        timeFormatter.dateFormat = "HH:mm"
+        return timeFormatter
+    }()
 
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        refreshControl.addTarget(self, action: #selector(refresh), for: UIControl.Event.valueChanged)
         
         setupCalendar()
         setupTableView()
@@ -36,7 +53,7 @@ class ListViewController: UIViewController {
     
     required init(viewModel: ToDoItemViewModel) {
         self.viewModel = viewModel
-        toDoItems = self.viewModel.toDoItems(forDate: Date())
+        self.toDoItems = self.viewModel.toDoItems(forDate: Date())
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -83,12 +100,12 @@ class ListViewController: UIViewController {
     }
     
     private func setupTableView() {
-        self.tableView = UITableView()
+        tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
-        view.addSubview(tableView)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(ToDoItemCell.self, forCellReuseIdentifier: String(describing: ToDoItemCell.self))
         tableView.addSubview(refreshControl)
+        view.addSubview(tableView)
     }
     
     private func setupCalendar() {
@@ -111,7 +128,7 @@ class ListViewController: UIViewController {
     // MARK: - Selectors
     
     @objc private func addToDoItem() {
-        let addToDoItemVC = UINavigationController(rootViewController: AddToDoItemViewController(viewModel: viewModel))
+        let addToDoItemVC = UINavigationController(rootViewController: AddToDoItemViewController(viewModel: viewModel, date: selectedDate ?? Date()))
         self.navigationController?.present(addToDoItemVC, animated: true, completion: nil)
     }
     
@@ -135,6 +152,10 @@ extension ListViewController: UITableViewDelegate {
         navigationController?.present(detailsVC, animated: true, completion: nil)
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
+    }
 }
 
 // MARK: - UITableViewDataSource
@@ -145,7 +166,11 @@ extension ListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "ToDo"
+        if let selectedDate = selectedDate {
+            return "ToDo for \(dateFormatter.string(from: selectedDate))"
+        } else {
+            return "ToDo for \(dateFormatter.string(from: Date()))"
+        }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -153,9 +178,24 @@ extension ListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = toDoItems[indexPath.row].itemName
+        let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ToDoItemCell.self), for: indexPath) as! ToDoItemCell
+        let startDate = dateFormatter.string(from: Date(timeIntervalSince1970: self.toDoItems[indexPath.row].startDate))
+        let startTime = timeFormatter.string(from: Date(timeIntervalSince1970: self.toDoItems[indexPath.row].startDate))
+        let endTime = timeFormatter.string(from: Date(timeIntervalSince1970: self.toDoItems[indexPath.row].endDate))
+        let endDate = dateFormatter.string(from: Date(timeIntervalSince1970: self.toDoItems[indexPath.row].endDate))
+        cell.startDateLabel.text = startDate
+        cell.startTimeLabel.text = startTime
+        cell.endTimeLabel.text = endTime
+        cell.endDateLabel.text = endDate
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            viewModel.removeToDoItem(toDoItem: toDoItems[indexPath.row])
+            toDoItems.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
     }
 }
 

@@ -25,6 +25,8 @@ class AddToDoItemViewController: UIViewController {
     private lazy var alert = UIAlertController(title: "All fields are required", message: "Please fill out both name and description fields.", preferredStyle: .alert)
     
     private let viewModel: ToDoItemViewModel!
+    private let date: Date!
+    
     public var completionHandler: (() -> Void)?
     
     // MARK: - Lifecycle
@@ -37,8 +39,9 @@ class AddToDoItemViewController: UIViewController {
     
     // MARK: - Initializers
     
-    init(viewModel: ToDoItemViewModel) {
+    init(viewModel: ToDoItemViewModel, date: Date) {
         self.viewModel = viewModel
+        self.date = date
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -67,7 +70,7 @@ class AddToDoItemViewController: UIViewController {
         view.addSubview(startDateLabel)
         view.addSubview(endDateLabel)
         
-        endDatePicker.date = Date(timeIntervalSinceNow: 3600)
+        endDatePicker.date = Date(timeInterval: 3600, since: date)
         
         nameTextField.becomeFirstResponder()
         nameTextField.delegate = self
@@ -164,7 +167,7 @@ extension AddToDoItemViewController {
     
     private func generateDatePicker() -> UIDatePicker {
         let datePicker = UIDatePicker()
-        datePicker.setDate(Date(), animated: false)
+        datePicker.setDate(date, animated: false)
         return datePicker
     }
     

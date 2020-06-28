@@ -28,6 +28,12 @@ class ToDoItemViewModel {
         try! realm.commitWrite()
     }
     
+    public func removeToDoItem(toDoItem: ToDoItem) {
+        try! realm.write {
+            realm.delete(toDoItem)
+        }
+    }
+    
     public func toDoItems(forDate date: Date) -> [ToDoItem] {
         let allItems = allToDoItems()
         let calendar = Calendar.current
@@ -39,6 +45,7 @@ class ToDoItemViewModel {
                 toDoItems.append(toDoItem)
             }
         }
+        toDoItems.sort { $0.startDate < $1.startDate }
         return toDoItems
     }
     
