@@ -19,7 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             // do nothing here
         } else {
             window = UIWindow()
-            window?.rootViewController = UINavigationController(rootViewController: ListViewController(viewModel: ToDoItemViewModel()))
+            let realmManager = RealmManager()
+            window?.rootViewController = UINavigationController(rootViewController: ListViewController(realmManager: realmManager))
             window?.makeKeyAndVisible()
         }
         return true

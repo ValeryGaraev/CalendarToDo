@@ -1,5 +1,5 @@
 //
-//  ToDoItemViewModel.swift
+//  RealmManager.swift
 //  CalendarToDo
 //
 //  Created by Valery Garaev on 27.06.2020.
@@ -9,7 +9,7 @@
 import Foundation
 import RealmSwift
 
-class ToDoItemViewModel {
+class RealmManager {
     
     // MARK: - Properties
     
@@ -17,20 +17,27 @@ class ToDoItemViewModel {
     
     // MARK: - Functions
     
-    public func saveToDoItem(name: String, description: String, startDate: TimeInterval, endDate: TimeInterval) {
-        realm.beginWrite()
-        let toDoItem = ToDoItem()
-        toDoItem.itemName = name
-        toDoItem.itemDescription = description
-        toDoItem.startDate = startDate
-        toDoItem.endDate = endDate
-        realm.add(toDoItem)
-        try! realm.commitWrite()
+    public func save(toDoItem: ToDoItem) {
+        try! realm.write {
+            realm.add(toDoItem)
+        }
     }
     
-    public func removeToDoItem(toDoItem: ToDoItem) {
+    public func remove(toDoItem: ToDoItem) {
         try! realm.write {
             realm.delete(toDoItem)
+        }
+    }
+    
+    public func update(toDoItem: ToDoItem) {
+        try! realm.write {
+            realm.add(toDoItem, update: Realm.UpdatePolicy.modified)
+        }
+    }
+    
+    public func addImage(_ image: Data, to toDoItem: ToDoItem) {
+        try! realm.write {
+            toDoItem.image = image
         }
     }
     
@@ -49,7 +56,7 @@ class ToDoItemViewModel {
         return toDoItems
     }
     
-    public func allToDoItems() -> [ToDoItem] {
+    private func allToDoItems() -> [ToDoItem] {
         return realm.objects(ToDoItem.self).toArray(ofType: ToDoItem.self) as [ToDoItem]
     }
     

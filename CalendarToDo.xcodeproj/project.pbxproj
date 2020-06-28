@@ -14,9 +14,9 @@
 		1AAB877D24A76EC2006D8C96 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1AAB877B24A76EC2006D8C96 /* LaunchScreen.storyboard */; };
 		1AAB878824A76EC2006D8C96 /* CalendarToDoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB878724A76EC2006D8C96 /* CalendarToDoTests.swift */; };
 		1AAB879324A76F25006D8C96 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB879224A76F25006D8C96 /* Extensions.swift */; };
-		1AAB879724A78397006D8C96 /* AddToDoItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB879624A78397006D8C96 /* AddToDoItemViewController.swift */; };
+		1AAB879724A78397006D8C96 /* AddViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB879624A78397006D8C96 /* AddViewController.swift */; };
 		1AAB879924A79A33006D8C96 /* ToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB879824A79A33006D8C96 /* ToDoItem.swift */; };
-		1AAB879C24A7A266006D8C96 /* ToDoItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB879B24A7A266006D8C96 /* ToDoItemViewModel.swift */; };
+		1AAB879C24A7A266006D8C96 /* RealmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB879B24A7A266006D8C96 /* RealmManager.swift */; };
 		1AAB879F24A7C788006D8C96 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB879E24A7C788006D8C96 /* DetailsViewController.swift */; };
 		1ABC5E6824A8D90D009AE4DA /* ToDoItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABC5E6724A8D90D009AE4DA /* ToDoItemCell.swift */; };
 		5BA48C5B4BAF950A27537A90 /* Pods_CalendarToDo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29286B8D424B5612D0A328C9 /* Pods_CalendarToDo.framework */; };
@@ -45,9 +45,9 @@
 		1AAB878724A76EC2006D8C96 /* CalendarToDoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarToDoTests.swift; sourceTree = "<group>"; };
 		1AAB878924A76EC2006D8C96 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1AAB879224A76F25006D8C96 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		1AAB879624A78397006D8C96 /* AddToDoItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToDoItemViewController.swift; sourceTree = "<group>"; };
+		1AAB879624A78397006D8C96 /* AddViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddViewController.swift; sourceTree = "<group>"; };
 		1AAB879824A79A33006D8C96 /* ToDoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItem.swift; sourceTree = "<group>"; };
-		1AAB879B24A7A266006D8C96 /* ToDoItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItemViewModel.swift; sourceTree = "<group>"; };
+		1AAB879B24A7A266006D8C96 /* RealmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmManager.swift; sourceTree = "<group>"; };
 		1AAB879E24A7C788006D8C96 /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
 		1ABC5E6724A8D90D009AE4DA /* ToDoItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItemCell.swift; sourceTree = "<group>"; };
 		1E5CF03AC40ECAA16553363F /* Pods_CalendarToDoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CalendarToDoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -104,9 +104,9 @@
 				1AAB877024A76EBE006D8C96 /* AppDelegate.swift */,
 				1AAB877224A76EBE006D8C96 /* SceneDelegate.swift */,
 				1AAB879A24A7A22B006D8C96 /* Model */,
-				1AAB879D24A7A26A006D8C96 /* ViewModel */,
 				1ABC5E6624A8D8E4009AE4DA /* View */,
 				1AAB879524A782EF006D8C96 /* Controller */,
+				1AAB879D24A7A26A006D8C96 /* Managers */,
 				1AAB879424A782C0006D8C96 /* Utilities */,
 				1AAB877924A76EC2006D8C96 /* Assets.xcassets */,
 				1AAB877B24A76EC2006D8C96 /* LaunchScreen.storyboard */,
@@ -136,7 +136,7 @@
 			isa = PBXGroup;
 			children = (
 				1AAB877424A76EBE006D8C96 /* ListViewController.swift */,
-				1AAB879624A78397006D8C96 /* AddToDoItemViewController.swift */,
+				1AAB879624A78397006D8C96 /* AddViewController.swift */,
 				1AAB879E24A7C788006D8C96 /* DetailsViewController.swift */,
 			);
 			path = Controller;
@@ -150,12 +150,12 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		1AAB879D24A7A26A006D8C96 /* ViewModel */ = {
+		1AAB879D24A7A26A006D8C96 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				1AAB879B24A7A266006D8C96 /* ToDoItemViewModel.swift */,
+				1AAB879B24A7A266006D8C96 /* RealmManager.swift */,
 			);
-			path = ViewModel;
+			path = Managers;
 			sourceTree = "<group>";
 		};
 		1ABC5E6624A8D8E4009AE4DA /* View */ = {
@@ -354,14 +354,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				1ABC5E6824A8D90D009AE4DA /* ToDoItemCell.swift in Sources */,
-				1AAB879724A78397006D8C96 /* AddToDoItemViewController.swift in Sources */,
+				1AAB879724A78397006D8C96 /* AddViewController.swift in Sources */,
 				1AAB877524A76EBE006D8C96 /* ListViewController.swift in Sources */,
 				1AAB879924A79A33006D8C96 /* ToDoItem.swift in Sources */,
 				1AAB879F24A7C788006D8C96 /* DetailsViewController.swift in Sources */,
 				1AAB877124A76EBE006D8C96 /* AppDelegate.swift in Sources */,
 				1AAB877324A76EBE006D8C96 /* SceneDelegate.swift in Sources */,
 				1AAB879324A76F25006D8C96 /* Extensions.swift in Sources */,
-				1AAB879C24A7A266006D8C96 /* ToDoItemViewModel.swift in Sources */,
+				1AAB879C24A7A266006D8C96 /* RealmManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

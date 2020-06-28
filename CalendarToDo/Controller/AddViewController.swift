@@ -1,5 +1,5 @@
 //
-//  AddToDoItemViewController.swift
+//  AddViewController.swift
 //  CalendarToDo
 //
 //  Created by Valery Garaev on 27.06.2020.
@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class AddToDoItemViewController: UIViewController {
+class AddViewController: UIViewController {
 
     // MARK: - Properties
     
@@ -24,7 +24,7 @@ class AddToDoItemViewController: UIViewController {
     
     private lazy var alert = UIAlertController(title: "All fields are required", message: "Please fill out both name and description fields.", preferredStyle: .alert)
     
-    private let viewModel: ToDoItemViewModel!
+    private let realmManager: RealmManager!
     private let date: Date!
     
     public var completionHandler: (() -> Void)?
@@ -39,8 +39,8 @@ class AddToDoItemViewController: UIViewController {
     
     // MARK: - Initializers
     
-    init(viewModel: ToDoItemViewModel, date: Date) {
-        self.viewModel = viewModel
+    required init(realmManager: RealmManager, date: Date) {
+        self.realmManager = realmManager
         self.date = date
         super.init(nibName: nil, bundle: nil)
     }
@@ -131,7 +131,13 @@ class AddToDoItemViewController: UIViewController {
         let startDate = startDatePicker.date.timeIntervalSince1970
         let endDate = endDatePicker.date.timeIntervalSince1970
         
-        viewModel.saveToDoItem(name: name, description: description, startDate: startDate, endDate: endDate)
+        let toDoItem = ToDoItem()
+        toDoItem.itemName = name
+        toDoItem.itemDescription = description
+        toDoItem.startDate = startDate
+        toDoItem.endDate = endDate
+        
+        realmManager.save(toDoItem: toDoItem)
         
         completionHandler?()
         navigationController?.dismiss(animated: true, completion: nil)
@@ -143,7 +149,7 @@ class AddToDoItemViewController: UIViewController {
 
 }
 
-extension AddToDoItemViewController: UITextFieldDelegate {
+extension AddViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
     }
@@ -151,7 +157,7 @@ extension AddToDoItemViewController: UITextFieldDelegate {
 
 // MARK: - Helper functions
 
-extension AddToDoItemViewController {
+extension AddViewController {
     private func generateTextField(withPlaceholder placeholder: String, isSecure: Bool = false) -> UITextField {
         let textField = UITextField()
         textField.font = UIFont.systemFont(ofSize: 16)

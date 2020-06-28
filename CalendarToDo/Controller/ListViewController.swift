@@ -15,7 +15,7 @@ class ListViewController: UIViewController {
     
     private var tableView: UITableView!
     private weak var calendarView: FSCalendar!
-    private let viewModel: ToDoItemViewModel
+    private let realmManager: RealmManager
     private var toDoItems: [ToDoItem]
     private var selectedDate: Date?
     
@@ -52,9 +52,9 @@ class ListViewController: UIViewController {
     
     // MARK: - Initializers
     
-    required init(viewModel: ToDoItemViewModel) {
-        self.viewModel = viewModel
-        self.toDoItems = self.viewModel.toDoItems(forDate: Date())
+    required init(realmManager: RealmManager) {
+        self.realmManager = realmManager
+        self.toDoItems = self.realmManager.toDoItems(forDate: Date())
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -65,20 +65,16 @@ class ListViewController: UIViewController {
     // MARK: - Helper functions
     
     private func setupUI() {
-        // set background
         if #available(iOS 13.0, *) {
             view.backgroundColor = .systemBackground
         } else {
             view.backgroundColor = .white
         }
         
-        // setup navigation bar
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.barTintColor = .white
         navigationItem.title = "ToDo List"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addToDoItem))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAddButton))
         
-        // constraint subviews
         calendarView.setConstraints(topAnchor: view.safeAreaLayoutGuide.topAnchor,
                                     leftAnchor: view.safeAreaLayoutGuide.leftAnchor,
                                     bottomAnchor: tableView.topAnchor,
@@ -128,16 +124,16 @@ class ListViewController: UIViewController {
     
     // MARK: - Selectors
     
-    @objc private func addToDoItem() {
-        let addToDoItemVC = UINavigationController(rootViewController: AddToDoItemViewController(viewModel: viewModel, date: selectedDate ?? Date()))
+    @objc private func didTapAddButton() {
+        let addToDoItemVC = UINavigationController(rootViewController: AddViewController(realmManager: realmManager, date: selectedDate ?? Date()))
         self.navigationController?.present(addToDoItemVC, animated: true, completion: nil)
     }
     
     @objc private func refresh() {
         if let selectedDate = selectedDate {
-            toDoItems = viewModel.toDoItems(forDate: selectedDate)
+            toDoItems = realmManager.toDoItems(forDate: selectedDate)
         } else {
-            toDoItems = viewModel.toDoItems(forDate: Date())
+            toDoItems = realmManager.toDoItems(forDate: Date())
         }
         tableView.reloadData()
         refreshControl.endRefreshing()
@@ -149,8 +145,9 @@ class ListViewController: UIViewController {
 
 extension ListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detailsVC = UINavigationController(rootViewController: DetailsViewController(toDoItem: toDoItems[indexPath.row]))
-        navigationController?.present(detailsVC, animated: true, completion: nil)
+        let detailsVC = DetailsViewController(toDoItem: toDoItems[indexPath.row], realmManager: realmManager)
+        navigationController?.modalPresentationStyle = .fullScreen
+        navigationController?.pushViewController(detailsVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -190,7 +187,7 @@ extension ListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            viewModel.removeToDoItem(toDoItem: toDoItems[indexPath.row])
+            realmManager.remove(toDoItem: toDoItems[indexPath.row])
             toDoItems.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
@@ -202,7 +199,7 @@ extension ListViewController: UITableViewDataSource {
 extension ListViewController: FSCalendarDelegate {
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
         self.selectedDate = date
-        self.toDoItems = viewModel.toDoItems(forDate: date)
+        self.toDoItems = realmManager.toDoItems(forDate: date)
         tableView.reloadData()
     }
 }
