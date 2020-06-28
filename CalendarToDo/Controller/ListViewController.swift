@@ -10,7 +10,7 @@ import UIKit
 import FSCalendar
 
 class ListViewController: UIViewController {
-
+    
     // MARK: - Properties
     
     private var tableView: UITableView!
@@ -18,6 +18,7 @@ class ListViewController: UIViewController {
     private let viewModel: ToDoItemViewModel
     private var toDoItems: [ToDoItem]
     private var selectedDate: Date?
+    
     private let refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
         refreshControl.addTarget(self, action: #selector(refresh), for: UIControl.Event.valueChanged)
@@ -38,7 +39,7 @@ class ListViewController: UIViewController {
         timeFormatter.dateFormat = "HH:mm"
         return timeFormatter
     }()
-
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -61,7 +62,7 @@ class ListViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Helpers
+    // MARK: - Helper functions
     
     private func setupUI() {
         // set background
@@ -148,13 +149,13 @@ class ListViewController: UIViewController {
 
 extension ListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let detailsVC = DetailsViewController(toDoItem: toDoItems[indexPath.row])
+        let detailsVC = UINavigationController(rootViewController: DetailsViewController(toDoItem: toDoItems[indexPath.row]))
         navigationController?.present(detailsVC, animated: true, completion: nil)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return 50
     }
 }
 
@@ -179,14 +180,11 @@ extension ListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ToDoItemCell.self), for: indexPath) as! ToDoItemCell
-        let startDate = dateFormatter.string(from: Date(timeIntervalSince1970: self.toDoItems[indexPath.row].startDate))
         let startTime = timeFormatter.string(from: Date(timeIntervalSince1970: self.toDoItems[indexPath.row].startDate))
         let endTime = timeFormatter.string(from: Date(timeIntervalSince1970: self.toDoItems[indexPath.row].endDate))
-        let endDate = dateFormatter.string(from: Date(timeIntervalSince1970: self.toDoItems[indexPath.row].endDate))
-        cell.startDateLabel.text = startDate
         cell.startTimeLabel.text = startTime
         cell.endTimeLabel.text = endTime
-        cell.endDateLabel.text = endDate
+        cell.nameLabel.text = self.toDoItems[indexPath.row].itemName
         return cell
     }
     

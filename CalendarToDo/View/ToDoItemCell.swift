@@ -12,15 +12,7 @@ class ToDoItemCell: UITableViewCell {
     
     // MARK: - Properties
     
-    var startDateLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .systemGray
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textAlignment = .left
-        return label
-    }()
-    
-    var startTimeLabel: UILabel = {
+    let startTimeLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
         label.font = UIFont.boldSystemFont(ofSize: 16)
@@ -28,15 +20,7 @@ class ToDoItemCell: UITableViewCell {
         return label
     }()
     
-    var endDateLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .systemGray
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.textAlignment = .left
-        return label
-    }()
-    
-    var endTimeLabel: UILabel = {
+    let endTimeLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
         label.font = UIFont.boldSystemFont(ofSize: 16)
@@ -44,10 +28,19 @@ class ToDoItemCell: UITableViewCell {
         return label
     }()
     
-    var dividerView: UIView = {
+    let dividerView: UIView = {
         let view = UIView()
+        view.setDimensions(width: 45, height: 0.75)
         view.backgroundColor = .systemGray
         return view
+    }()
+    
+    let nameLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .black
+        label.font = UIFont.boldSystemFont(ofSize: 16)
+        label.textAlignment = .left
+        return label
     }()
 
     // MARK: - Initializers
@@ -55,43 +48,39 @@ class ToDoItemCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        let stackView = UIStackView(arrangedSubviews: [startDateLabel, startTimeLabel, dividerView, endTimeLabel, endDateLabel])
-        stackView.distribution = .equalSpacing
-        stackView.axis = .vertical
-        stackView.alignment = .center
+        if #available(iOS 13.0, *) {
+            if self.traitCollection.userInterfaceStyle == .dark {
+                startTimeLabel.textColor = .white
+                endTimeLabel.textColor = .white
+                nameLabel.textColor = .white
+            }
+        }
+
+        let dateStackView: UIStackView = {
+            let stackView = UIStackView(arrangedSubviews: [startTimeLabel, dividerView, endTimeLabel])
+            stackView.distribution = .equalCentering
+            stackView.axis = .vertical
+            stackView.alignment = .center
+            return stackView
+        }()
         
-        addSubview(stackView)
+        addSubview(dateStackView)
+        addSubview(nameLabel)
         
-        dividerView.setConstraints(width: 80, height: 0.75)
+        dateStackView.setConstraints(topAnchor: self.topAnchor,
+                                     leftAnchor: self.leftAnchor,
+                                     bottomAnchor: self.bottomAnchor,
+                                     paddingTop: 5,
+                                     paddingLeft: 20,
+                                     paddingBottom: 5,
+                                     width: 50)
         
-        stackView.setConstraints(topAnchor: self.topAnchor,
-                                 leftAnchor: self.leftAnchor,
-                                 bottomAnchor: self.bottomAnchor,
-                                 paddingTop: 10,
-                                 paddingLeft: 0,
-                                 paddingBottom: 10,
-                                 width: 100)
-        
-        
+        nameLabel.setConstraints(leftAnchor: dateStackView.rightAnchor, paddingLeft: 10)
+        nameLabel.centerY(inView: self)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
-}
-
-extension UIStackView {
-    func addBackground(color: UIColor) {
-        let subView = UIView(frame: bounds)
-        subView.backgroundColor = color
-        subView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        insertSubview(subView, at: 0)
-    }
 }
