@@ -138,6 +138,12 @@ class AddViewController: UIViewController {
         toDoItem.endDate = endDate
         
         realmManager.save(toDoItem: toDoItem)
+        FirebaseManager().save(toDoItem: toDoItem) { (error, databaseReference) in
+            if let error = error {
+                print("DEBUG: Error saving: \(error.localizedDescription)")
+                return
+            }
+        }
         
         completionHandler?()
         navigationController?.dismiss(animated: true, completion: nil)

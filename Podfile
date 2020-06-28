@@ -8,6 +8,9 @@ target 'CalendarToDo' do
   # Pods for CalendarToDo
   pod 'FSCalendar'
   pod 'RealmSwift'
+  pod 'Firebase/Core'
+  pod 'Firebase/Database'
+  pod 'Firebase/Storage'
 
   target 'CalendarToDoTests' do
     inherit! :search_paths

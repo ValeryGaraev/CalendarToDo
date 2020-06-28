@@ -17,31 +17,31 @@ class RealmManager {
     
     // MARK: - Functions
     
-    public func save(toDoItem: ToDoItem) {
+    public final func save(toDoItem: ToDoItem) {
         try! realm.write {
             realm.add(toDoItem)
         }
     }
     
-    public func remove(toDoItem: ToDoItem) {
+    public final func remove(toDoItem: ToDoItem) {
         try! realm.write {
             realm.delete(toDoItem)
         }
     }
     
-    public func update(toDoItem: ToDoItem) {
+    public final func update(toDoItem: ToDoItem) {
         try! realm.write {
             realm.add(toDoItem, update: Realm.UpdatePolicy.modified)
         }
     }
     
-    public func addImage(_ image: Data, to toDoItem: ToDoItem) {
+    public final func addImage(_ image: Data, to toDoItem: ToDoItem) {
         try! realm.write {
             toDoItem.image = image
         }
     }
     
-    public func toDoItems(forDate date: Date) -> [ToDoItem] {
+    public final func toDoItems(forDate date: Date) -> [ToDoItem] {
         let allItems = allToDoItems()
         let calendar = Calendar.current
         let selectedDate = calendar.dateComponents([.year, .month, .day], from: date)

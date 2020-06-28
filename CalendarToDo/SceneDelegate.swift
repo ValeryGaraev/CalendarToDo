@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 @available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -22,6 +23,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let realmManager = RealmManager()
         window?.rootViewController = UINavigationController(rootViewController: ListViewController(realmManager: realmManager))
         window?.makeKeyAndVisible()
+        FirebaseApp.configure()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

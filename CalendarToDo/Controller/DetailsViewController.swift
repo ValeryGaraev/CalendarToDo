@@ -80,7 +80,7 @@ class DetailsViewController: UIViewController {
         navigationItem.title = "Details"
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add image", style: .plain, target: self, action: #selector(didTapAddImageButton))
         
-        if let image = UIImage(data: toDoItem.image) {
+        if let image = UIImage(data: toDoItem.image ?? Data()) {
             self.image = image
         }
     }
@@ -123,7 +123,7 @@ extension DetailsViewController: UITableViewDelegate {
         if indexPath.section == 4 {
             return view.frame.width
         } else {
-            return 44
+            return UITableView.automaticDimension
         }
     }
 }
@@ -167,12 +167,16 @@ extension DetailsViewController: UITableViewDataSource {
         switch indexPath.section {
         case 0:
             cell.textLabel?.text = toDoItem.itemName
+            cell.textLabel?.numberOfLines = 0
         case 1:
             cell.textLabel?.text = "On " + dateFormatter.string(from: Date(timeIntervalSince1970: toDoItem.startDate)) + " at " + timeFormatter.string(from: Date(timeIntervalSince1970: toDoItem.startDate))
         case 2:
             cell.textLabel?.text = "On " + dateFormatter.string(from: Date(timeIntervalSince1970: toDoItem.endDate)) + " at " + timeFormatter.string(from: Date(timeIntervalSince1970: toDoItem.endDate))
         case 3:
             cell.textLabel?.text = toDoItem.itemDescription
+            cell.textLabel?.lineBreakMode = .byWordWrapping
+            cell.textLabel?.textAlignment = .justified
+            cell.textLabel?.numberOfLines = 0
         case 4:
             cell.imageView?.image = image
             cell.imageView?.fillView(cell)
@@ -190,6 +194,12 @@ extension DetailsViewController: UIImagePickerControllerDelegate, UINavigationCo
         self.image = image
         guard let imageData = image.pngData() else { return }
         realmManager.addImage(imageData, to: self.toDoItem)
+        FirebaseManager().save(toDoItem: toDoItem) { (error, databaseReference) in
+            if let error = error {
+                print("DEBUG: Error saving: \(error.localizedDescription)")
+                return
+            }
+        }
         dismiss(animated: true, completion: nil)
     }
 }

@@ -15,7 +15,7 @@ class ToDoItem: Object {
     @objc dynamic var itemDescription: String = ""
     @objc dynamic var startDate: TimeInterval = 0.0
     @objc dynamic var endDate: TimeInterval = 0.0
-    @objc dynamic var image: Data = Data()
+    @objc dynamic var image: Data? = nil
     
     override class func primaryKey() -> String? {
         return "id"
