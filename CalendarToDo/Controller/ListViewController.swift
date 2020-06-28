@@ -97,8 +97,12 @@ class ListViewController: UIViewController {
         calendar.delegate = self
         view.addSubview(calendar)
         
-        if #available(iOS 13.0, *), self.traitCollection.userInterfaceStyle == .dark {
-            calendar.appearance.titleDefaultColor = .white
+        if #available(iOS 13.0, *) {
+            if self.traitCollection.userInterfaceStyle == .dark {
+                calendar.appearance.titleDefaultColor = .white
+            } else {
+                calendar.appearance.titleDefaultColor = .black
+            }
         }
         
         self.calendarView = calendar
