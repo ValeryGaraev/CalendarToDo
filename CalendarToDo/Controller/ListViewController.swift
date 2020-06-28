@@ -187,6 +187,7 @@ extension ListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
+            FirebaseManager().remove(toDoItem: toDoItems[indexPath.row])
             realmManager.remove(toDoItem: toDoItems[indexPath.row])
             toDoItems.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
@@ -201,5 +202,25 @@ extension ListViewController: FSCalendarDelegate {
         self.selectedDate = date
         self.toDoItems = realmManager.toDoItems(forDate: date)
         tableView.reloadData()
+    }
+}
+
+// MARK: - FSCalendarDataSource
+
+extension ListViewController: FSCalendarDataSource {
+    func calendar(_ calendar: FSCalendar, numberOfEventsFor date: Date) -> Int {
+        let toDoItems = realmManager.toDoItems(forDate: date)
+        return toDoItems.count > 0 ? 1 : 0
+    }
+}
+
+extension ListViewController: FSCalendarDelegateAppearance {
+    func calendar(_ calendar: FSCalendar, willDisplay cell: FSCalendarCell, for date: Date, at monthPosition: FSCalendarMonthPosition) {
+        let toDoItems = realmManager.toDoItems(forDate: date)
+        cell.eventIndicator.isHidden = false
+        cell.eventIndicator.color = UIColor.green
+        if !toDoItems.isEmpty {
+            cell.eventIndicator.numberOfEvents = 1
+        }
     }
 }

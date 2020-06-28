@@ -10,6 +10,9 @@ import Foundation
 import Firebase
 
 class FirebaseManager {
+    
+    // MARK: - Functions
+    
     public final func save(toDoItem: ToDoItem, completion: @escaping (Error?, DatabaseReference) -> Void) {
         let fileName = toDoItem.id
         let storageReference = STORAGE_IMAGES.child(fileName)
@@ -34,6 +37,16 @@ class FirebaseManager {
                               "endDate": toDoItem.endDate] as [String : Any]
                 TODOITEMS_REF.child(toDoItem.id).updateChildValues(values, withCompletionBlock: completion)
             }
+        }
+    }
+    
+    public final func remove(toDoItem: ToDoItem) {
+        if toDoItem.image != nil {
+            let storageReference = STORAGE_IMAGES.child(toDoItem.id)
+            storageReference.delete(completion: nil)
+            TODOITEMS_REF.child(toDoItem.id).removeValue()
+        } else {
+            TODOITEMS_REF.child(toDoItem.id).removeValue()
         }
     }
 }
