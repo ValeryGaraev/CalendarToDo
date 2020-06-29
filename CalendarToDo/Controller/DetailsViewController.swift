@@ -23,12 +23,6 @@ class DetailsViewController: UIViewController {
     
     private let imagePickerController = UIImagePickerController()
     
-    private let refreshControl: UIRefreshControl = {
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(refresh), for: UIControl.Event.valueChanged)
-        return refreshControl
-    }()
-    
     private let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US")
@@ -91,7 +85,6 @@ class DetailsViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: String(describing: UITableViewCell.self))
-        tableView.addSubview(refreshControl)
         view.addSubview(tableView)
         tableView.setConstraints(topAnchor: view.safeAreaLayoutGuide.topAnchor,
                                  leftAnchor: view.safeAreaLayoutGuide.leftAnchor,
@@ -104,11 +97,6 @@ class DetailsViewController: UIViewController {
     }
     
     // MARK: - Selectors
-    
-    @objc private func refresh() {
-        tableView.reloadData()
-        refreshControl.endRefreshing()
-    }
     
     @objc private func didTapAddImageButton() {
         present(imagePickerController, animated: true, completion: nil)
@@ -132,7 +120,6 @@ extension DetailsViewController: UITableViewDelegate {
 
 extension DetailsViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        print(#function)
         if image == nil {
             return 4
         } else {
@@ -194,7 +181,7 @@ extension DetailsViewController: UIImagePickerControllerDelegate, UINavigationCo
         self.image = image
         guard let imageData = image.pngData() else { return }
         realmManager.addImage(imageData, to: self.toDoItem)
-        FirebaseManager().save(toDoItem: toDoItem) { (error, databaseReference) in
+        FirebaseManager.shared.save(toDoItem: toDoItem) { (error, databaseReference) in
             if let error = error {
                 print("DEBUG: Error saving: \(error.localizedDescription)")
                 return

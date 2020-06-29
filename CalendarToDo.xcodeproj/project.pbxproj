@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A8D93C824AA648B00A0C780 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8D93C724AA648B00A0C780 /* Reachability.swift */; };
+		1A8D93CA24AA87AA00A0C780 /* voice_message.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 1A8D93C924AA87AA00A0C780 /* voice_message.jpg */; };
 		1AAB877124A76EBE006D8C96 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB877024A76EBE006D8C96 /* AppDelegate.swift */; };
 		1AAB877324A76EBE006D8C96 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB877224A76EBE006D8C96 /* SceneDelegate.swift */; };
 		1AAB877524A76EBE006D8C96 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AAB877424A76EBE006D8C96 /* ListViewController.swift */; };
@@ -37,6 +39,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A8D93C724AA648B00A0C780 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
+		1A8D93C924AA87AA00A0C780 /* voice_message.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = voice_message.jpg; sourceTree = "<group>"; };
+		1A8D93CB24AA8D6600A0C780 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1AAB876D24A76EBE006D8C96 /* CalendarToDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CalendarToDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1AAB877024A76EBE006D8C96 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1AAB877224A76EBE006D8C96 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -87,6 +92,7 @@
 		1AAB876424A76EBE006D8C96 = {
 			isa = PBXGroup;
 			children = (
+				1A8D93CB24AA8D6600A0C780 /* README.md */,
 				1AAB876F24A76EBE006D8C96 /* CalendarToDo */,
 				1AAB878624A76EC2006D8C96 /* CalendarToDoTests */,
 				1AAB876E24A76EBE006D8C96 /* Products */,
@@ -125,6 +131,7 @@
 		1AAB878624A76EC2006D8C96 /* CalendarToDoTests */ = {
 			isa = PBXGroup;
 			children = (
+				1A8D93C924AA87AA00A0C780 /* voice_message.jpg */,
 				1AAB878724A76EC2006D8C96 /* CalendarToDoTests.swift */,
 				1AAB878924A76EC2006D8C96 /* Info.plist */,
 			);
@@ -136,6 +143,7 @@
 			children = (
 				1AAB879224A76F25006D8C96 /* Extensions.swift */,
 				1ABC5E7024A945E8009AE4DA /* Constants.swift */,
+				1A8D93C724AA648B00A0C780 /* Reachability.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -293,6 +301,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A8D93CA24AA87AA00A0C780 /* voice_message.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,6 +378,7 @@
 			files = (
 				1ABC5E6824A8D90D009AE4DA /* ToDoItemCell.swift in Sources */,
 				1AAB879724A78397006D8C96 /* AddViewController.swift in Sources */,
+				1A8D93C824AA648B00A0C780 /* Reachability.swift in Sources */,
 				1AAB877524A76EBE006D8C96 /* ListViewController.swift in Sources */,
 				1AAB879924A79A33006D8C96 /* ToDoItem.swift in Sources */,
 				1ABC5E7324A947C8009AE4DA /* FirebaseManager.swift in Sources */,

@@ -22,12 +22,16 @@ class AddViewController: UIViewController {
     private lazy var startDateLabel = generateLabel(withText: "Choose start date")
     private lazy var endDateLabel = generateLabel(withText: "Choose end date")
     
-    private lazy var alert = UIAlertController(title: "All fields are required", message: "Please fill out both name and description fields.", preferredStyle: .alert)
+    private let alert: UIAlertController = {
+        let alertController = UIAlertController(title: "All fields are required", message: "Please fill out both name and description fields.", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Will do!", style: .cancel, handler: nil))
+        return alertController
+    }()
     
     private let realmManager: RealmManager!
     private let date: Date!
     
-    public var completionHandler: (() -> Void)?
+    public var completionHandler: ((ToDoItem) -> Void)?
     
     // MARK: - Lifecycle
     
@@ -61,14 +65,15 @@ class AddViewController: UIViewController {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: UIBarButtonItem.Style.done, target: self, action: #selector(didTapSaveButton))
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel", style: UIBarButtonItem.Style.done, target: self, action: #selector(didTapCancelButton))
         
-        alert.addAction(UIAlertAction(title: "Will do!", style: .cancel, handler: nil))
-        
         view.addSubview(nameTextField)
         view.addSubview(descriptionTextField)
         view.addSubview(startDatePicker)
         view.addSubview(endDatePicker)
         view.addSubview(startDateLabel)
         view.addSubview(endDateLabel)
+        
+        let dismissKeyboardTapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(dismissKeyboardTapGesture)
         
         endDatePicker.date = Date(timeInterval: 3600, since: date)
         
@@ -138,22 +143,28 @@ class AddViewController: UIViewController {
         toDoItem.endDate = endDate
         
         realmManager.save(toDoItem: toDoItem)
-        FirebaseManager().save(toDoItem: toDoItem) { (error, databaseReference) in
+        FirebaseManager.shared.save(toDoItem: toDoItem) { (error, databaseReference) in
             if let error = error {
                 print("DEBUG: Error saving: \(error.localizedDescription)")
                 return
             }
         }
         
-        completionHandler?()
+        completionHandler?(toDoItem)
         navigationController?.dismiss(animated: true, completion: nil)
     }
     
     @objc private func didTapCancelButton() {
         navigationController?.dismiss(animated: true, completion: nil)
     }
+    
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
 
 }
+
+// MARK: - UITextFieldDelegate
 
 extension AddViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

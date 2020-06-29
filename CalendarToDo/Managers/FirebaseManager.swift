@@ -11,9 +11,15 @@ import Firebase
 
 class FirebaseManager {
     
+    // MARK: - Properties
+    
+    static let shared = FirebaseManager()
+    
     // MARK: - Functions
     
     public final func save(toDoItem: ToDoItem, completion: @escaping (Error?, DatabaseReference) -> Void) {
+        guard Reachability.shared.checkConnection() else { return }
+        
         let fileName = toDoItem.id
         let storageReference = STORAGE_IMAGES.child(fileName)
         
@@ -41,6 +47,7 @@ class FirebaseManager {
     }
     
     public final func remove(toDoItem: ToDoItem) {
+        guard Reachability.shared.checkConnection() else { return }
         if toDoItem.image != nil {
             let storageReference = STORAGE_IMAGES.child(toDoItem.id)
             storageReference.delete(completion: nil)

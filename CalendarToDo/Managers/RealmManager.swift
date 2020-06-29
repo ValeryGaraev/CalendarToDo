@@ -29,6 +29,12 @@ class RealmManager {
         }
     }
     
+    public final func removeAllToDoItems() {
+        try! realm.write {
+            realm.deleteAll()
+        }
+    }
+    
     public final func update(toDoItem: ToDoItem) {
         try! realm.write {
             realm.add(toDoItem, update: Realm.UpdatePolicy.modified)
@@ -56,7 +62,7 @@ class RealmManager {
         return toDoItems
     }
     
-    private func allToDoItems() -> [ToDoItem] {
+    public final func allToDoItems() -> [ToDoItem] {
         return realm.objects(ToDoItem.self).toArray(ofType: ToDoItem.self) as [ToDoItem]
     }
     

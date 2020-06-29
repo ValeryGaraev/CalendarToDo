@@ -25,6 +25,12 @@ class ListViewController: UIViewController {
         return refreshControl
     }()
     
+    private let offlineAlert: UIAlertController = {
+        let alertController = UIAlertController(title: "Your connection appears to be offline", message: "ToDo items won't be uploaded to Firebase", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        return alertController
+    }()
+    
     private let dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US")
@@ -62,13 +68,17 @@ class ListViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Helper functions
+    // MARK: - Setup functions
     
     private func setupUI() {
         if #available(iOS 13.0, *) {
             view.backgroundColor = .systemBackground
         } else {
             view.backgroundColor = .white
+        }
+        
+        if Reachability.shared.checkConnection() == false {
+            self.present(offlineAlert, animated: true, completion: nil)
         }
         
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -125,8 +135,14 @@ class ListViewController: UIViewController {
     // MARK: - Selectors
     
     @objc private func didTapAddButton() {
-        let addToDoItemVC = UINavigationController(rootViewController: AddViewController(realmManager: realmManager, date: selectedDate ?? Date()))
-        self.navigationController?.present(addToDoItemVC, animated: true, completion: nil)
+        let addVC = AddViewController(realmManager: realmManager, date: selectedDate ?? Date())
+        let addNavigationVC = UINavigationController(rootViewController: addVC)
+        addVC.completionHandler = { [weak self] toDoItem in
+            guard let self = self else { return }
+            self.toDoItems.append(toDoItem)
+            self.tableView.reloadData()
+        }
+        self.navigationController?.present(addNavigationVC, animated: true, completion: nil)
     }
     
     @objc private func refresh() {
@@ -187,7 +203,7 @@ extension ListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            FirebaseManager().remove(toDoItem: toDoItems[indexPath.row])
+            FirebaseManager.shared.remove(toDoItem: toDoItems[indexPath.row])
             realmManager.remove(toDoItem: toDoItems[indexPath.row])
             toDoItems.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
