@@ -8,7 +8,7 @@
 
 import SystemConfiguration
 
-struct Reachability {
+class Reachability {
     
     // MARK: - Properties
     
@@ -17,7 +17,7 @@ struct Reachability {
     
     // MARK: - Functions
     
-    func checkConnection() -> Bool {
+    public final func checkConnection() -> Bool {
         var flags = SCNetworkReachabilityFlags()
         SCNetworkReachabilityGetFlags(self.networkReachability!, &flags)
         return flags.contains(.reachable) && !flags.contains(.connectionRequired)

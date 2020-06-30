@@ -53,7 +53,7 @@ class AddViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Setup UI
+    // MARK: - Setup functions
     
     private func setupUI() {
         if #available(iOS 13.0, *) {
@@ -72,7 +72,7 @@ class AddViewController: UIViewController {
         view.addSubview(startDateLabel)
         view.addSubview(endDateLabel)
         
-        let dismissKeyboardTapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        let dismissKeyboardTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapToDismissKeyboard))
         view.addGestureRecognizer(dismissKeyboardTapGesture)
         
         endDatePicker.date = Date(timeInterval: 3600, since: date)
@@ -158,7 +158,7 @@ class AddViewController: UIViewController {
         navigationController?.dismiss(animated: true, completion: nil)
     }
     
-    @objc private func dismissKeyboard() {
+    @objc private func didTapToDismissKeyboard() {
         view.endEditing(true)
     }
 

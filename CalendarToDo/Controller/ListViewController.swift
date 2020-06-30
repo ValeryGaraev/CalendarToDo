@@ -21,7 +21,7 @@ class ListViewController: UIViewController {
     
     private let refreshControl: UIRefreshControl = {
         let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(refresh), for: UIControl.Event.valueChanged)
+        refreshControl.addTarget(self, action: #selector(didPullToRefresh), for: UIControl.Event.valueChanged)
         return refreshControl
     }()
     
@@ -145,7 +145,7 @@ class ListViewController: UIViewController {
         self.navigationController?.present(addNavigationVC, animated: true, completion: nil)
     }
     
-    @objc private func refresh() {
+    @objc private func didPullToRefresh() {
         if let selectedDate = selectedDate {
             toDoItems = realmManager.toDoItems(forDate: selectedDate)
         } else {
@@ -229,6 +229,8 @@ extension ListViewController: FSCalendarDataSource {
         return toDoItems.count > 0 ? 1 : 0
     }
 }
+
+// MARK: - FSCalendarDelegateAppearance
 
 extension ListViewController: FSCalendarDelegateAppearance {
     func calendar(_ calendar: FSCalendar, willDisplay cell: FSCalendarCell, for date: Date, at monthPosition: FSCalendarMonthPosition) {

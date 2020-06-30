@@ -61,7 +61,7 @@ class DetailsViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Helper functions
+    // MARK: - Setup functions
     
     private func setupUI() {
         if #available(iOS 13.0, *) {
@@ -174,6 +174,8 @@ extension DetailsViewController: UITableViewDataSource {
         return cell
     }
 }
+
+// MARK: - Image picker
 
 extension DetailsViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {

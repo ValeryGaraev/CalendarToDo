@@ -63,7 +63,9 @@ class RealmManager {
     }
     
     public final func allToDoItems() -> [ToDoItem] {
-        return realm.objects(ToDoItem.self).toArray(ofType: ToDoItem.self) as [ToDoItem]
+        var allToDoItems = realm.objects(ToDoItem.self).toArray(ofType: ToDoItem.self)
+        allToDoItems.sort { $0.startDate < $1.startDate }
+        return allToDoItems
     }
     
 }
